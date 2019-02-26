@@ -50,6 +50,24 @@ Managing access refers to granting others \(AWS accounts and users\) permission 
 Access policy describes who has access to what\. You can associate an access policy with a resource \(bucket and object\) or a user\. Accordingly, you can categorize the available Amazon S3 access policies as follows:
 + **Resource\-based policies ** – Bucket policies and access control lists \(ACLs\) are resource\-based because you attach them to your Amazon S3 resources\.   
 ![\[Diagram depicting AWS account resources, including an S3 bucket with a bucket ACL and bucket policy, and S3 objects with object ACLs.\]](http://docs.aws.amazon.com/AmazonS3/latest/dev/images/resource-based-policy.png)
+
+  + Bucket Policy – For your bucket, you can add a bucket policy to grant other AWS accounts or IAM users permissions for the bucket and the objects in it\. Any object permissions apply only to the objects that the bucket owner creates\. Bucket policies supplement, and in many cases, replace ACL\-based access policies (which will be described next)\.
+
+    The following is an example bucket policy\. You express bucket policy \(and user policy\) using a JSON file\. The policy grants anonymous read permission on all objects in a bucket\. The bucket policy has one statement, which allows the `s3:GetObject` action \(read permission\) on objects in a bucket named `examplebucket`\. By specifying the `principal` with a wildcard \(\*\), the policy grants anonymous access, so use this example policy carefully. The following example would make objects publicly accessible\.
+
+    ```
+    {
+        "Version":"2012-10-17",
+        "Statement": [
+            {
+                "Effect":"Allow",
+                "Principal": "*",
+                "Action":["s3:GetObject"],
+                "Resource":["arn:aws:s3:::examplebucket/*"]
+            }
+        ]
+    }
+    ```
   + ACL – Each bucket and object has an ACL associated with it\. An ACL is a list of grants identifying grantee and permission granted\. You use ACLs to grant basic read/write permissions to other AWS accounts\. ACLs use an Amazon S3–specific XML schema\. 
 
     The following is an example bucket ACL\. The grant in the ACL shows a bucket owner as having full control permission\. 
@@ -75,23 +93,7 @@ Access policy describes who has access to what\. You can associate an access pol
     ```
 
     Both bucket and object ACLs use the same XML schema\.
-  + Bucket Policy – For your bucket, you can add a bucket policy to grant other AWS accounts or IAM users permissions for the bucket and the objects in it\. Any object permissions apply only to the objects that the bucket owner creates\. Bucket policies supplement, and in many cases, replace ACL\-based access policies\.
-
-    The following is an example bucket policy\. You express bucket policy \(and user policy\) using a JSON file\. The policy grants anonymous read permission on all objects in a bucket\. The bucket policy has one statement, which allows the `s3:GetObject` action \(read permission\) on objects in a bucket named `examplebucket`\.  By specifying the `principal` with a wild card \(\*\), the policy grants anonymous access\. 
-
-    ```
-    {
-        "Version":"2012-10-17",
-        "Statement": [
-            {
-                "Effect":"Allow",
-                "Principal": "*",
-                "Action":["s3:GetObject"],
-                "Resource":["arn:aws:s3:::examplebucket/*"]
-            }
-        ]
-    }
-    ```
+    
 + **User policies** – You can use IAM to manage access to your Amazon S3 resources\. You can create IAM users, groups, and roles in your account and attach access policies to them granting them access to AWS resources, including Amazon S3\.   
 ![\[Diagram depicting the AWS account admin and other users with attached user policies.\]](http://docs.aws.amazon.com/AmazonS3/latest/dev/images/user-policy.png)
 
